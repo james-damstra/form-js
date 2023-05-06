@@ -444,6 +444,27 @@ describe('playground', function() {
     expect(domQuery('[aria-label="Form Output"]', container)).to.exist;
   });
 
+  it('should load additional module', async function() {
+    class Tester {
+    }
+
+    const TestModule = {
+      __init__: [ 'tester' ],
+      tester: [ 'type', Tester ]
+    };
+
+    let playground;
+    await act(() => {
+      playground = new Playground({
+        container,
+        schema,
+        additionalModules: [ TestModule ],
+      });
+    });
+
+    expect(playground.getForm().get('tester')).to.exist;
+    expect(playground.getEditor().get('tester')).to.exist;
+  });
 
   describe('form data submit', function() {
 

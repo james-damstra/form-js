@@ -1,13 +1,29 @@
 import { render, fireEvent } from '@testing-library/preact/pure';
 
 import Palette, {
-  PALETTE_ENTRIES,
   PALETTE_GROUPS
 } from '../../../../src/features/palette/components/Palette';
 
 import { expectNoViolations, insertStyles } from '../../../TestHelper';
+import {Button, Text, Checkbox, Textfield, Textarea} from '@bpmn-io/form-js-viewer';
 
 insertStyles();
+
+const paletteBuilder = (entries) => {
+  return {
+    all: () => {
+      return entries
+        .filter(({ config: fieldConfig }) => fieldConfig.type !== 'default')
+        .map(({ config: fieldConfig }) => {
+          return {
+            label: fieldConfig.label,
+            type: fieldConfig.type,
+            group: fieldConfig.group
+          };
+        });
+    }
+  };
+};
 
 describe('palette', function() {
 
@@ -35,23 +51,22 @@ describe('palette', function() {
     document.body.removeChild(parent);
   });
 
-
   it('should render entries', async function() {
 
     // given
-    const result = createPalette({ container });
+    const result = createPalette({ container, paletteFormFields: paletteBuilder([ Button, Checkbox ]) });
 
     // then
-    expect(result.container.querySelectorAll('.fjs-palette-field')).to.have.length(12);
+    expect(result.container.querySelectorAll('.fjs-palette-field')).to.have.length(2);
 
-    expectEntries(result.container, PALETTE_ENTRIES);
+    expectEntries(result.container, paletteBuilder([ Button, Checkbox ]).all());
   });
 
 
   it('should render groups', async function() {
 
     // given
-    const result = createPalette({ container });
+    const result = createPalette({ container, paletteFormFields: paletteBuilder([ Button, Text, Checkbox, Textfield ]) });
 
     // then
     expect(result.container.querySelectorAll('.fjs-palette-group')).to.have.length(4);
@@ -77,7 +92,7 @@ describe('palette', function() {
     it('should display matches (name)', function() {
 
       // given
-      const result = createPalette({ container });
+      const result = createPalette({ container, paletteFormFields: paletteBuilder([ Text, Textarea, Textfield, Button ]) });
 
       const search = result.container.querySelector('.fjs-palette-search');
 
@@ -96,7 +111,7 @@ describe('palette', function() {
     it('should ignore spaces in search', function() {
 
       // given
-      const result = createPalette({ container });
+      const result = createPalette({ container, paletteFormFields: paletteBuilder([ Text, Textarea, Textfield ]) });
 
       const search = result.container.querySelector('.fjs-palette-search');
 
@@ -146,7 +161,7 @@ describe('palette', function() {
     it('should clear', async function() {
 
       // given
-      const result = createPalette({ container });
+      const result = createPalette({ container, paletteFormFields: paletteBuilder([ Text, Textarea, Textfield, Button ]) });
 
       const search = result.container.querySelector('.fjs-palette-search');
 
@@ -165,7 +180,7 @@ describe('palette', function() {
       fireEvent.click(clear);
 
       // then
-      expectEntries(result.container, PALETTE_ENTRIES);
+      expectEntries(result.container, paletteBuilder([ Text, Textarea, Textfield, Button ]).all());
     });
 
   });
@@ -225,10 +240,10 @@ describe('palette', function() {
 // helper ///////////////
 
 function createPalette(options = {}) {
-  const { container } = options;
+  const { container, paletteFormFields = paletteBuilder([ Button ]) } = options;
 
   return render(
-    <Palette />,
+    <Palette paletteFormFields={ paletteFormFields } />,
     {
       container
     }

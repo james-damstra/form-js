@@ -14,6 +14,7 @@ import { PlaygroundRoot } from './components/PlaygroundRoot';
  *  editor?: { inlinePropertiesPanel: Boolean }
  *  exporter?: { name: String, version: String }
  *  schema: any
+ *  additionalModules?: []
  * } } FormPlaygroundOptions
  */
 

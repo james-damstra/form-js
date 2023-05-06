@@ -11,16 +11,6 @@ import {
   SearchIcon
 } from '../../../render/components/icons';
 
-import { formFields } from '@bpmn-io/form-js-viewer';
-
-export const PALETTE_ENTRIES = formFields.filter(({ config: fieldConfig }) => fieldConfig.type !== 'default').map(({ config: fieldConfig }) => {
-  return {
-    label: fieldConfig.label,
-    type: fieldConfig.type,
-    group: fieldConfig.group
-  };
-});
-
 export const PALETTE_GROUPS = [
   {
     label: 'Basic input',
@@ -42,7 +32,9 @@ export const PALETTE_GROUPS = [
 
 export default function Palette(props) {
 
-  const [ entries, setEntries ] = useState(PALETTE_ENTRIES);
+  const paletteEntries = props.paletteFormFields.all();
+
+  const [ entries, setEntries ] = useState(paletteEntries);
 
   const [ searchTerm, setSearchTerm ] = useState('');
 
@@ -74,7 +66,7 @@ export default function Palette(props) {
 
   // filter entries on search change
   useEffect(() => {
-    const entries = PALETTE_ENTRIES.filter(filter);
+    const entries = paletteEntries.filter(filter);
     setEntries(entries);
   }, [ filter, searchTerm ]);
 

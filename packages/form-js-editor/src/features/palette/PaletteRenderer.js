@@ -21,11 +21,12 @@ import {
  */
 export default class PaletteRenderer {
 
-  constructor(paletteConfig, eventBus) {
+  constructor(paletteConfig, eventBus, paletteFormFields) {
     const {
       parent
     } = paletteConfig || {};
 
+    this._paletteFormFields = paletteFormFields;
     this._eventBus = eventBus;
 
     this._container = domify('<div class="fjs-palette-container"></div>');
@@ -79,7 +80,7 @@ export default class PaletteRenderer {
 
   _render() {
     render(
-      <Palette />,
+      <Palette paletteFormFields={ this._paletteFormFields } />,
       this._container
     );
 
@@ -95,4 +96,4 @@ export default class PaletteRenderer {
   }
 }
 
-PaletteRenderer.$inject = [ 'config.palette', 'eventBus' ];
+PaletteRenderer.$inject = [ 'config.palette', 'eventBus', 'paletteFormFields' ];

@@ -21,8 +21,6 @@ import { DragAndDropContext } from '../context';
 
 import { DeleteIcon, DraggableIcon } from './icons';
 
-import { PALETTE_ENTRIES } from '../../features/palette/components/Palette';
-
 import {
   DRAG_CONTAINER_CLS,
   DROP_CONTAINER_HORIZONTAL_CLS,
@@ -447,6 +445,7 @@ function getFormFieldIndex(parent, formField) {
 function CreatePreview(props) {
 
   const { drake } = useContext(DragAndDropContext);
+  const paletteFormFields = useService('paletteFormFields');
 
   function handleCloned(clone, original, type) {
 
@@ -455,7 +454,7 @@ function CreatePreview(props) {
     // (1) field preview
     if (fieldType) {
 
-      const { label } = findPaletteEntry(fieldType);
+      const { label } = paletteFormFields.findType(fieldType);
 
       const Icon = iconsByType(fieldType);
 
@@ -518,8 +517,4 @@ function defaultPalette(paletteConfig) {
 
 function defaultPropertiesPanel(propertiesPanelConfig) {
   return !(propertiesPanelConfig && propertiesPanelConfig.parent);
-}
-
-function findPaletteEntry(type) {
-  return PALETTE_ENTRIES.find(entry => entry.type === type);
 }
