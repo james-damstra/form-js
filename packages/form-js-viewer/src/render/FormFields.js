@@ -16,4 +16,8 @@ export default class FormFields {
   get(type) {
     return this._formFields[ type ];
   }
+
+  all() {
+    return Object.values(this._formFields);
+  }
 }
